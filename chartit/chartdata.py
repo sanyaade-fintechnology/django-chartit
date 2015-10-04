@@ -1,9 +1,7 @@
 import copy
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from itertools import groupby, chain, islice
 from operator import itemgetter
-# use SortedDict instead of native OrderedDict for Python 2.6 compatibility
-from django.utils.datastructures import SortedDict
 from validation import clean_dps, clean_pdps
 from chartit.validation import clean_sortf_mapf_mts
 
@@ -422,8 +420,8 @@ class PivotDataPool(DataPool):
             values_terms = chain(categories, legend_by)
             vqs = qs.values(*values_terms)
             # NOTE: Order of annotation is important!!!
-            # So need an SortedDict. Can't use a regular dict.
-            ann_terms = SortedDict((k, d['func']) for k, d in tk_td_tuples)
+            # So need an OrderedDict. Can't use a regular dict.
+            ann_terms = OrderedDict((k, d['func']) for k, d in tk_td_tuples)
             vqs = vqs.annotate(**ann_terms)
             # Now order by
             top_n_per_cat = td['top_n_per_cat']
